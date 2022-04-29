@@ -37,7 +37,9 @@ jobs:
           useLockFile: false
 
       - name: 🏄 Copy test env vars
-        run: cp .env.example .env
+        run: |
+          cd ${{ matrix.stack.name }}
+          cp .env.example .env
 
       - name: 🏛 Archive ${{ matrix.stack.name }}
         uses: actions/upload-artifact@v3
@@ -77,9 +79,9 @@ jobs:
           working-directory: ${{ matrix.stack.name }}
 
       - name: 🔬 Lint
-        run: npm run lint
-        with:
-          working-directory: ${{ matrix.stack.name }}
+        run: |
+          cd ${{ matrix.stack.name }}
+          npm run lint
 
   typecheck:
     name: ʦ TypeScript
@@ -113,9 +115,9 @@ jobs:
           working-directory: ${{ matrix.stack.name }}
 
       - name: 🔎 Type check
-        run: npm run typecheck --if-present
-        with:
-          working-directory: ${{ matrix.stack.name }}
+        run: |
+          cd ${{ matrix.stack.name }}
+          npm run typecheck --if-present
 
   vitest:
     name: ⚡ Vitest
@@ -149,9 +151,9 @@ jobs:
           working-directory: ${{ matrix.stack.name }}
 
       - name: ⚡ Run vitest
-        run: npm run test -- --coverage
-        with:
-          working-directory: ${{ matrix.stack.name }}
+        run: |
+          cd ${{ matrix.stack.name }}
+          npm run test -- --coverage
 
   cypress:
     name: ⚫️ Cypress
@@ -185,14 +187,14 @@ jobs:
           working-directory: ${{ matrix.stack.name }}
 
       - name: 🛠 Setup Database
-        run: npx prisma migrate reset --force
-        with:
-          working-directory: ${{ matrix.stack.name }}
+        run: |
+          cd ${{ matrix.stack.name }}
+          npx prisma migrate reset --force
 
       - name: ⚙️ Build
-        run: npm run build
-        with:
-          working-directory: ${{ matrix.stack.name }}
+        run: |
+          cd ${{ matrix.stack.name }}
+          npm run build
 
       - name: 🌳 Cypress run
         uses: cypress-io/github-action@v3
