@@ -214,8 +214,7 @@ jobs:
           working-directory: ${{ matrix.stack.name }}
           
       - name: 🐳 Docker compose
-        # the grunge stack uses dynamodb so we can skip all the db setup
-        if: ${{ matrix.stack.name != 'grunge' }}
+        if: ${{ matrix.stack.name == 'blues' }}
         # the sleep is just there to give time for postgres to get started
         run: |
           cd ${{ matrix.stack.name }}
