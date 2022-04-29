@@ -184,10 +184,13 @@ jobs:
         stack:
           - repo: "remix-run/indie-stack"
             name: "indie"
+            cypress: "npm run start:mocks"
           - repo: "remix-run/blues-stack"
             name: "blues"
+            cypress: "npm run start:mocks"
           - repo: "remix-run/grunge-stack"
             name: "grunge"
+            cypress: "npm run dev"
     steps:
       - name: 🛑 Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.9.1
@@ -234,7 +237,7 @@ jobs:
       - name: 🌳 Cypress run
         uses: cypress-io/github-action@v3
         with:
-          start: npm run start:mocks
+          start: ${{ matrix.stack.cypress }}
           wait-on: "http://localhost:8811"
           working-directory: ${{ matrix.stack.name }}
         env:
