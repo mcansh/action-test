@@ -47,7 +47,7 @@ jobs:
           cp .env.example .env
           
       - name: 📁 Zip artifact
-        run: zip release.zip ./${{ matrix.stack.name }} -r
+        run: zip release.zip ./${{ matrix.stack.name }} -r -x node_modules/\*
 
       - name: 🗄️ Archive ${{ matrix.stack.name }}
         uses: actions/upload-artifact@v3
@@ -214,7 +214,9 @@ jobs:
         # the grunge stack uses dynamodb so we can skip all the db setup
         if: ${{ matrix.stack.name != 'grunge' }}
         # the sleep is just there to give time for postgres to get started
-        run: docker-compose up -d && sleep 3
+        run: |
+          cd ${{ matrix.stack.name }}
+          docker-compose up -d && sleep 3
         env:
           DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/postgres"
 
