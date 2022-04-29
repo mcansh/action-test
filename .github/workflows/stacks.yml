@@ -49,6 +49,7 @@ jobs:
 
   lint:
     name: ⬣ ESLint
+    needs: [setup]
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -85,6 +86,7 @@ jobs:
 
   typecheck:
     name: ʦ TypeScript
+    needs: [setup]
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -121,6 +123,7 @@ jobs:
 
   vitest:
     name: ⚡ Vitest
+    needs: [setup]
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -157,6 +160,7 @@ jobs:
 
   cypress:
     name: ⚫️ Cypress
+    needs: [setup]
     runs-on: ubuntu-latest
     strategy:
       matrix:
