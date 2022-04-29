@@ -35,17 +35,25 @@ jobs:
         with:
           working-directory: ${{ matrix.stack.name }}
           useLockFile: false
+          
+      - name: Run `remix init`
+        run: |
+          cd ${{ matrix.stack.name }}
+          npx remix init
 
       - name: 🏄 Copy test env vars
         run: |
           cd ${{ matrix.stack.name }}
           cp .env.example .env
+          
+      - name: Zip artifact
+        run: zip release.zip ./${{ matrix.stack.name }} -r
 
       - name: 🏛 Archive ${{ matrix.stack.name }}
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.stack.name }}-archive
-          path: ${{ matrix.stack.name }}
+          path: release.zip
 
   lint:
     name: ⬣ ESLint
@@ -73,6 +81,9 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ${{ matrix.stack.name }}-archive
+          
+      - name: Unzip artifact
+        run: unzip release.zip
 
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
@@ -110,6 +121,9 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ${{ matrix.stack.name }}-archive
+          
+      - name: Unzip artifact
+        run: unzip release.zip
 
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
@@ -147,6 +161,9 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ${{ matrix.stack.name }}-archive
+          
+      - name: Unzip artifact
+        run: unzip release.zip
 
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
@@ -184,6 +201,9 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ${{ matrix.stack.name }}-archive
+          
+      - name: Unzip artifact
+        run: unzip release.zip
 
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
