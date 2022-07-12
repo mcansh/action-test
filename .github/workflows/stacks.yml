@@ -30,9 +30,9 @@ jobs:
         with:
           node-version: 16
 
-      - name: ⚒️ Create new ${{ matrix.stack.name }} app with ${{ github.event.client_payload.ref }}
+      - name: ⚒️ Create new ${{ matrix.stack.name }} app with ${{ inputs.version }}
         run: |
-          npx -y create-remix@${{ github.event.client_payload.ref }} ${{ matrix.stack.name }} --template ${{ matrix.stack.repo }} --typescript --no-install
+          npx -y create-remix@${{ inputs.version }} ${{ matrix.stack.name }} --template ${{ matrix.stack.repo }} --typescript --no-install
 
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
