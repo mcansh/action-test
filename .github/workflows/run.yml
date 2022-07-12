@@ -6,6 +6,6 @@ on:
 jobs:
   stacks:
     name: 🥞 Remix Stacks Test
-    uses: ./.github/workflows/stacks.yml@main
+    uses: ./.github/workflows/stacks.yml
     with:
       version: "0.0.0-nightly-de9fc05-20220712"
