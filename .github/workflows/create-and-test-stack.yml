@@ -41,7 +41,7 @@ jobs:
 
       - name: Run `remix init`
         run: |
-          cd ${{ inputs.name }}
+          cd ${{ inputs.stack }}
           npx remix init
 
       - name: 🏄 Copy test env vars
