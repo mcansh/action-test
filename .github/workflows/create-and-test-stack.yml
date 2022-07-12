@@ -17,8 +17,8 @@ on:
         type: string
 
 jobs:
-  setup:
-    name: Remix Stacks Test
+  test:
+    name: Remix ${{ inputs.stack }} Stacks Test
     runs-on: ubuntu-latest
     steps:
       - name: 🛑 Cancel Previous Runs
@@ -34,10 +34,9 @@ jobs:
           npx -y create-remix@${{ inputs.version }} ${{ inputs.stack }} --template ${{ inputs.repo }} --typescript --no-install
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-        with:
-          working-directory: ${{ inputs.stack }}
-          useLockFile: false
+        run: |
+          cd ${{ inputs.stack }}
+          npm install
 
       - name: Run `remix init`
         run: |
@@ -49,133 +48,20 @@ jobs:
           cd ${{ inputs.stack }}
           cp .env.example .env
 
-      - name: 📁 Zip artifact
-        run: zip release.zip ./${{ inputs.stack }} -r -x "**/node_modules/*"
-
-      - name: 🗄️ Archive ${{ inputs.stack }}
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ inputs.stack }}-archive
-          path: release.zip
-
-  lint:
-    name: ⬣ ESLint
-    needs: [setup]
-    runs-on: ubuntu-latest
-    steps:
-      - name: 🛑 Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.1
-
-      - name: ⎔ Setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
-      - name: 🗄️ Restore ${{ inputs.stack }}
-        uses: actions/download-artifact@v3
-        with:
-          name: ${{ inputs.stack }}-archive
-
-      - name: 📁 Unzip artifact
-        run: unzip release.zip
-
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-        with:
-          working-directory: ${{ inputs.stack }}
-
       - name: 🔬 Lint
         run: |
           cd ${{ inputs.stack }}
           npm run lint
-
-  typecheck:
-    name: ʦ TypeScript
-    needs: [setup]
-    runs-on: ubuntu-latest
-    steps:
-      - name: 🛑 Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.1
-
-      - name: ⎔ Setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
-      - name: 🗄️ Restore ${{ inputs.stack }}
-        uses: actions/download-artifact@v3
-        with:
-          name: ${{ inputs.stack }}-archive
-
-      - name: 📁 Unzip artifact
-        run: unzip release.zip
-
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-        with:
-          working-directory: ${{ inputs.stack }}
 
       - name: 🔎 Type check
         run: |
           cd ${{ inputs.stack }}
           npm run typecheck --if-present
 
-  vitest:
-    name: ⚡ Vitest
-    needs: [setup]
-    runs-on: ubuntu-latest
-    steps:
-      - name: 🛑 Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.1
-
-      - name: ⎔ Setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
-      - name: 🗄️ Restore ${{ inputs.stack }}
-        uses: actions/download-artifact@v3
-        with:
-          name: ${{ inputs.stack }}-archive
-
-      - name: 📁 Unzip artifact
-        run: unzip release.zip
-
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-        with:
-          working-directory: ${{ inputs.stack }}
-
       - name: ⚡ Run vitest
         run: |
           cd ${{ inputs.stack }}
           npm run test -- --coverage
-
-  cypress:
-    name: ⚫️ Cypress
-    needs: [setup]
-    runs-on: ubuntu-latest
-    steps:
-      - name: 🛑 Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.1
-
-      - name: ⎔ Setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
-      - name: 🗄️ Restore ${{ inputs.stack }}
-        uses: actions/download-artifact@v3
-        with:
-          name: ${{ inputs.stack }}-archive
-
-      - name: 📁 Unzip artifact
-        run: unzip release.zip
-
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-        with:
-          working-directory: ${{ inputs.stack }}
 
       - name: 🐳 Docker compose
         if: ${{ inputs.stack == 'blues' }}
