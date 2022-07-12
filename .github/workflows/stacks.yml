@@ -1,8 +1,11 @@
 name: 🥞 Remix Stacks Test
 
 on:
-  repository_dispatch:
-    types: [release]
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
 
 jobs:
   setup:
@@ -17,6 +20,7 @@ jobs:
             name: "blues"
           - repo: "remix-run/grunge-stack"
             name: "grunge"
+
     steps:
       - name: 🛑 Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.9.1
@@ -35,7 +39,7 @@ jobs:
         with:
           working-directory: ${{ matrix.stack.name }}
           useLockFile: false
-          
+
       - name: Run `remix init`
         run: |
           cd ${{ matrix.stack.name }}
@@ -45,7 +49,7 @@ jobs:
         run: |
           cd ${{ matrix.stack.name }}
           cp .env.example .env
-          
+
       - name: 📁 Zip artifact
         run: zip release.zip ./${{ matrix.stack.name }} -r -x "**/node_modules/*"
 
@@ -81,7 +85,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ${{ matrix.stack.name }}-archive
-          
+
       - name: 📁 Unzip artifact
         run: unzip release.zip
 
@@ -121,7 +125,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ${{ matrix.stack.name }}-archive
-          
+
       - name: 📁 Unzip artifact
         run: unzip release.zip
 
@@ -161,7 +165,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ${{ matrix.stack.name }}-archive
-          
+
       - name: 📁 Unzip artifact
         run: unzip release.zip
 
@@ -204,7 +208,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ${{ matrix.stack.name }}-archive
-          
+
       - name: 📁 Unzip artifact
         run: unzip release.zip
 
@@ -212,7 +216,7 @@ jobs:
         uses: bahmutov/npm-install@v1
         with:
           working-directory: ${{ matrix.stack.name }}
-          
+
       - name: 🐳 Docker compose
         if: ${{ matrix.stack.name == 'blues' }}
         # the sleep is just there to give time for postgres to get started
@@ -234,7 +238,7 @@ jobs:
           npm run build
 
       - name: 🌳 Cypress run
-        uses: cypress-io/github-action@v3
+        uses: cypress-io/github-action@v4
         with:
           start: ${{ matrix.stack.cypress }}
           wait-on: "http://localhost:8811"

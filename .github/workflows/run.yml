@@ -4,12 +4,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  comment:
-    name: run some stuff
-    runs-on: ubuntu-latest
-    steps:
-      - uses: peter-evans/repository-dispatch@v2
-        with:
-          token: ${{ secrets.PAT }}
-          event-type: release
-          client-payload: '{ "ref": "0.0.0-nightly-74b7110-20220429" }'
+  stacks:
+    name: 🥞 Remix Stacks Test
+    uses: ./.github/workflows/stacks.yml@main
+    with:
+      version: "0.0.0-nightly-de9fc05-20220712"
