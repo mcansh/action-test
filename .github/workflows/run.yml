@@ -20,6 +20,9 @@ jobs:
             cypress_dev_command: "npm run start:mocks"
 
     steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v3
+
       - name: 🥞 Remix ${{ matrix.stack.stack }} Stack
         uses: ./.github/workflows/create-and-test-stack.yml
         with:
