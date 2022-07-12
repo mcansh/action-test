@@ -4,8 +4,29 @@ on:
   workflow_dispatch:
 
 jobs:
-  stacks:
-    name: 🥞 Remix Stacks Test
-    uses: ./.github/workflows/stacks.yml
+  indie:
+    name: 🥞 Remix Indie Stack
+    uses: ./.github/workflows/create-and-test-stack.yml
     with:
+      repo: "remix-run/indie-stack"
+      stack: "indie"
+      cypress_dev_command: "npm run start:mocks"
+      version: "0.0.0-nightly-de9fc05-20220712"
+
+  grunge:
+    name: 🥞 Remix Grunge Stack
+    uses: ./.github/workflows/create-and-test-stack.yml
+    with:
+      repo: "remix-run/grunge-stack"
+      stack: "grunge"
+      cypress_dev_command: "npm run dev"
+      version: "0.0.0-nightly-de9fc05-20220712"
+
+  blues:
+    name: 🥞 Remix Blues Stack
+    uses: ./.github/workflows/create-and-test-stack.yml
+    with:
+      repo: "remix-run/blues-stack"
+      stack: "blues"
+      cypress_dev_command: "npm run start:mocks"
       version: "0.0.0-nightly-de9fc05-20220712"
