@@ -4,29 +4,27 @@ on:
   workflow_dispatch:
 
 jobs:
-  indie:
-    name: 🥞 Remix Indie Stack
-    uses: ./.github/workflows/create-and-test-stack.yml
-    with:
-      repo: "remix-run/indie-stack"
-      stack: "indie"
-      cypress_dev_command: "npm run start:mocks"
-      version: "0.0.0-nightly-de9fc05-20220712"
+  stacks:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        stack:
+          - repo: "remix-run/indie-stack"
+            name: "indie"
+            cypress_dev_command: "npm run start:mocks"
+          - repo: "remix-run/grunge-stack"
+            name: "grunge"
+            cypress_dev_command: "npm run dev"
+          - repo: "remix-run/blues-stack"
+            name: "blues"
+            cypress_dev_command: "npm run start:mocks"
 
-  grunge:
-    name: 🥞 Remix Grunge Stack
-    uses: ./.github/workflows/create-and-test-stack.yml
-    with:
-      repo: "remix-run/grunge-stack"
-      stack: "grunge"
-      cypress_dev_command: "npm run dev"
-      version: "0.0.0-nightly-de9fc05-20220712"
+    steps:
+      - name: 🥞 Remix ${{ matrix.stack.stack }} Stack
+        uses: ./.github/workflows/create-and-test-stack.yml
+        with:
+          repo: ${{ matrix.stack.repo }}
+          stack: ${{ matrix.stack.name }}
+          cypress_dev_command: ${{ matrix.stack.cypress_dev_command }}
+          version: "0.0.0-nightly-de9fc05-20220712"
 
-  blues:
-    name: 🥞 Remix Blues Stack
-    uses: ./.github/workflows/create-and-test-stack.yml
-    with:
-      repo: "remix-run/blues-stack"
-      stack: "blues"
-      cypress_dev_command: "npm run start:mocks"
-      version: "0.0.0-nightly-de9fc05-20220712"
